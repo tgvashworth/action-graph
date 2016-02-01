@@ -5,6 +5,8 @@
 
 A task runner based on immutable data structures.
 
+Status: *Implementation* (not ready for use, but please contribute!)
+
 ## Install
 
 ```
