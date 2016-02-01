@@ -13,7 +13,71 @@ $ npm install action-graph
 
 ## Use
 
-TODO
+Example:
+
+```js
+import { createClass } from 'integrator';
+import {
+  Click,
+  Type
+} from './utils';
+
+const OpenUrl = createClass({
+  getDescription() {
+    const { fixtures } = this; // if you want
+    return `Open ${fixtures.get('url')}`;
+  }
+
+  getDefaultFixtures() {
+    return {
+      url: 'http://localhost',
+      expectedTitle: ''
+    };
+  }
+
+  run(session) {
+    const { fixtures } = this;
+    return session
+      .get(fixtures.get('url'))
+      .then(() => session.getPageTitle())
+      .then(title => {
+        if (title !== fixtures.get('expectedTitle')) {
+          throw new Error('Title was not as expected');
+        }
+      });
+  },
+
+  teardown(session) {
+    // ...
+  }
+});
+
+export const SendAMessage = createClass({
+  getDependencies() {
+    const { fixtures } = this; // if you want
+    return [
+      OpenUrl({
+        url: 'https://your.app',
+        expectedTitle: 'My App'
+      }),
+      Click({
+        selector: '.new'
+      }),
+      Type({
+        selector: '.subject',
+        text: 'The subject'
+      }),
+      Type({
+        selector: 'textarea',
+        text: 'The message'
+      }),
+      Click({
+        selector: '.send'
+      })
+    ];
+  }
+});
+```
 
 ### License
 

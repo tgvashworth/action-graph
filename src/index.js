@@ -1,1 +1,1 @@
-export * from './createAction';
+export * from './createClass';
