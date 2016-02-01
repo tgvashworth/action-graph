@@ -16,7 +16,7 @@ $ npm install action-graph
 Example:
 
 ```js
-import { createClass } from 'integrator';
+import { createClass } from 'action-graph';
 import {
   Click,
   Type
