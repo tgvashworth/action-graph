@@ -1,4 +1,5 @@
 import test from 'ava';
+import Immutable, { fromJS } from 'immutable';
 import createClass from '../src/createClass';
 
 test('importable', (t) => {
@@ -55,6 +56,36 @@ test(
         t.same(
             example.getDescription(),
             'An action'
+        );
+    }
+);
+
+test(
+    'createClass has default getDefaultFixtures',
+    (t) => {
+        var Example = createClass();
+        var example = new Example();
+        t.ok(
+            Immutable.is(
+                example.getDefaultFixtures(),
+                fromJS({})
+            )
+        );
+    }
+);
+
+test(
+    'createClass can overwrite getDefaultFixtures',
+    (t) => {
+        var Example = createClass({
+            getDefaultFixtures: () => ({ a: 1 })
+        });
+        var example = new Example();
+        t.ok(
+            Immutable.is(
+                example.getDefaultFixtures(),
+                fromJS({ a: 1 })
+            )
         );
     }
 );
