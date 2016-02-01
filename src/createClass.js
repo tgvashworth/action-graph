@@ -1,11 +1,11 @@
 import { Map } from 'immutable';
 
-export default function createClass(spec) {
+export default function createClass(spec={}) {
     const {
         displayName = '',
         getDescription,
         getDefaultFixtures
-    } = (spec || {});
+    } = spec;
 
     class Action {
         // Static and on the instance, because that's just easier
