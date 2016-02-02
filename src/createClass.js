@@ -5,7 +5,8 @@ export default function createClass(spec={}) {
         displayName = '',
         getDescription,
         getDefaultFixtures,
-        getDependencies
+        getDependencies,
+        run
     } = spec;
 
     class Action {
@@ -44,6 +45,19 @@ export default function createClass(spec={}) {
                     ? List(getDependencies.call(this))
                     : List()
             );
+        }
+
+        // The main block of an action - do your work here.
+        // The result is wrapped up in a Promise.
+        run(v, ...args) {
+            return Promise.resolve()
+                .then(() => {
+                    return (
+                        typeof run === 'function'
+                            ? run.call(this, v, ...args)
+                            : v
+                    );
+                });
         }
     }
 

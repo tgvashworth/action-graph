@@ -162,11 +162,41 @@ test(
     }
 );
 
+test(
+    'createClass has default run',
+    (t) => {
+        var Example = createClass();
+        var example = new Example();
+        return example.run(1)
+            .then((v) => {
+                t.same(v, 1);
+            });
+    }
+);
+
+test(
+    'createClass can overwrite run',
+    (t) => {
+        t.plan(2);
+        var Dep = createClass();
+        var Example = createClass({
+            run: (v) => {
+                t.same(v, 1);
+                return 2;
+            }
+        });
+        var example = new Example();
+        return example.run(1)
+            .then((v) => {
+                t.same(v, 2);
+            });
+    }
+);
 
 test(
     'createClass calls methods with correct context',
     (t) => {
-        t.plan(3);
+        t.plan(4);
 
         var Example = createClass({
             getDescription() {
@@ -182,10 +212,15 @@ test(
             getDependencies() {
                 t.same(this.constructor, Example);
                 return [];
+            },
+
+            run() {
+                t.same(this.constructor, Example);
             }
         });
         var example = new Example();
         example.getDescription();
         example.getDependencies();
+        return example.run();
     }
 );
