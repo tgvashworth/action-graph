@@ -1,18 +1,18 @@
 import buildRunPath from './buildRunPath';
 
-export default function run(action) {
+export default function run(action, context) {
     const runPath = buildRunPath(action);
-    const runThunk = (v) => runPath.reduce((pPrev, dep) => {
-        return pPrev.then((v) => dep.run(v));
-    }, Promise.resolve(v));
-    const teardownThunk = (v) => runPath.reverse().reduce((pPrev, dep) => {
-        return pPrev.then((v) => dep.teardown(v));
-    }, Promise.resolve(v));
+    const runThunk = (context) => runPath.reduce((pPrev, dep) => {
+        return pPrev.then(() => dep.run(context));
+    }, Promise.resolve());
+    const teardownThunk = (context) => runPath.reverse().reduce((pPrev, dep) => {
+        return pPrev.then(() => dep.teardown(context));
+    }, Promise.resolve());
 
     return Promise.resolve()
-        .then(() => runThunk())
+        .then(() => runThunk(context))
         .then(
-            () => teardownThunk(),
-            () => teardownThunk()
+            () => teardownThunk(context),
+            () => teardownThunk(context)
         );
 }

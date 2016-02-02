@@ -26,7 +26,7 @@ It's designed for integration testing, but could probably be used to make a buil
 Example:
 
 ```js
-import { createClass } from 'action-graph';
+import { createClass, run } from 'action-graph';
 import {
   Click,
   Type
@@ -45,8 +45,9 @@ const OpenUrl = createClass({
         };
     },
 
-    run(session) {
+    run(context) {
         const { fixtures } = this;
+        const { session } = context;
         return session
             .get(fixtures.get('url'))
             .then(() => session.getPageTitle())
@@ -57,12 +58,12 @@ const OpenUrl = createClass({
             });
     },
 
-    teardown(session) {
+    teardown(context) {
         // ...
     }
 });
 
-export const SendAMessage = createClass({
+const SendAMessage = createClass({
     getDependencies() {
         const { fixtures } = this; // if you want
         return [
@@ -86,6 +87,11 @@ export const SendAMessage = createClass({
             })
         ];
     }
+});
+
+// Actually run the action. Second argument is 'context'
+run(SendAMessage, {
+    session: getSession()
 });
 ```
 

@@ -114,3 +114,30 @@ test(
         return run(new ActionB());
     }
 );
+
+test(
+    'context is given to all actions',
+    (t) => {
+        t.plan(2);
+        var contextExample = {};
+        var ActionA = createClass({
+            run(context) {
+                t.same(context.example, contextExample);
+            }
+        });
+        var ActionB = createClass({
+            getDependencies() {
+                return [
+                    new ActionA()
+                ];
+            },
+
+            run(context) {
+                t.same(context.example, contextExample);
+            }
+        });
+        return run(new ActionB(), {
+            example: contextExample
+        });
+    }
+);
