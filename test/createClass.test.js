@@ -158,3 +158,31 @@ test(
         );
     }
 );
+
+
+test(
+    'createClass calls methods with correct context',
+    (t) => {
+        t.plan(3);
+
+        var Example = createClass({
+            getDescription() {
+                t.same(this.constructor, Example);
+                return '';
+            },
+
+            getDefaultFixtures() {
+                t.same(this.constructor, Example);
+                return {};
+            },
+
+            getDependencies() {
+                t.same(this.constructor, Example);
+                return [];
+            }
+        });
+        var example = new Example();
+        example.getDescription();
+        example.getDependencies();
+    }
+);
