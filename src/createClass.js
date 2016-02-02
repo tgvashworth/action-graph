@@ -27,7 +27,7 @@ export default function createClass(spec={}) {
         getDescription() {
             return (
                 typeof getDescription === 'function'
-                    ? getDescription.call(this)
+                    ? getDescription.call(this, this.fixtures)
                     : this.displayName
             );
         }

@@ -63,6 +63,20 @@ test(
 );
 
 test(
+    'createClass passes fixtures to getDescription',
+    (t) => {
+        t.plan(1);
+        var Example = createClass({
+            getDescription(fixtures) {
+                t.same(fixtures, fromJS({ a: 1 }));
+            }
+        });
+        var example = new Example({ a: 1 });
+        example.getDescription();
+    }
+);
+
+test(
     'createClass has default getDefaultFixtures',
     (t) => {
         var Example = createClass();
