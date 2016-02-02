@@ -141,3 +141,23 @@ test(
         });
     }
 );
+
+test(
+    'run propagates errors',
+    (t) => {
+        t.plan(2);
+        var Action = createClass({
+            run() {
+                t.pass();
+                throw new Error('Nope');
+            }
+        });
+        return run(new Action())
+            .then(
+                () => t.fail(),
+                (err) => {
+                    t.same(err.message, 'Nope');
+                }
+            );
+    }
+);
