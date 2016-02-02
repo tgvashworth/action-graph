@@ -1,6 +1,7 @@
 import test from 'ava';
 import Immutable, { fromJS } from 'immutable';
 import createClass from '../src/createClass';
+import is from '../src/is';
 
 test('importable', (t) => {
     t.ok(createClass);
@@ -108,6 +109,36 @@ test(
                     b: 2
                 })
             )
+        );
+    }
+);
+
+test(
+    'createClass has default getDependencies',
+    (t) => {
+        var Example = createClass();
+        var example = new Example();
+        t.ok(
+            Immutable.is(
+                example.getDependencies(),
+                fromJS([])
+            )
+        );
+    }
+);
+
+test(
+    'createClass can overwrite getDependencies',
+    (t) => {
+        var Dep = createClass();
+        var Example = createClass({
+            getDependencies: () => ([ new Dep() ])
+        });
+        var example = new Example();
+        t.ok(
+            example.getDependencies()
+                .zip(fromJS([ new Dep() ]))
+                .every(([ l, r ]) => is(l, r))
         );
     }
 );

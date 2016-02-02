@@ -1,10 +1,11 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 export default function createClass(spec={}) {
     const {
         displayName = '',
         getDescription,
-        getDefaultFixtures
+        getDefaultFixtures,
+        getDependencies
     } = spec;
 
     class Action {
@@ -33,6 +34,15 @@ export default function createClass(spec={}) {
                 typeof getDefaultFixtures === 'function'
                     ? Map(getDefaultFixtures.call(this))
                     : Map()
+            );
+        }
+
+        // Dependecies are used to compose Actions into chains.
+        getDependencies() {
+            return (
+                typeof getDependencies === 'function'
+                    ? List(getDependencies.call(this))
+                    : List()
             );
         }
     }

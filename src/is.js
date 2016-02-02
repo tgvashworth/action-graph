@@ -10,6 +10,6 @@ export default function is(left, right) {
     if (!Immutable.is(left.fixtures, right.fixtures)) {
         return false;
     }
-    
+
     return true;
 }
