@@ -1,5 +1,6 @@
 import test from 'ava';
 import Immutable, { fromJS } from 'immutable';
+import sameActionsList from '../src/sameActionsList';
 import createClass from '../src/createClass';
 import is from '../src/is';
 
@@ -136,9 +137,10 @@ test(
         });
         var example = new Example();
         t.ok(
-            example.getDependencies()
-                .zip(fromJS([ new Dep() ]))
-                .every(([ l, r ]) => is(l, r))
+            sameActionsList(
+                example.getDependencies(),
+                fromJS([ new Dep() ])
+            )
         );
     }
 );
@@ -152,9 +154,10 @@ test(
         });
         var example = new Example();
         t.ok(
-            example.getDependencies()
-                .zip(fromJS([ new Dep({ a: 10 }) ]))
-                .every(([ l, r ]) => is(l, r))
+            sameActionsList(
+                example.getDependencies(),
+                fromJS([ new Dep({ a: 10 }) ])
+            )
         );
     }
 );
