@@ -6,7 +6,8 @@ export default function createClass(spec={}) {
         getDescription,
         getDefaultFixtures,
         getDependencies,
-        run
+        run,
+        teardown
     } = spec;
 
     class Action {
@@ -55,6 +56,18 @@ export default function createClass(spec={}) {
                     return (
                         typeof run === 'function'
                             ? run.call(this, v, ...args)
+                            : v
+                    );
+                });
+        }
+
+        // Teardown allows an action to undo what it previously did
+        teardown(v) {
+            return Promise.resolve()
+                .then(() => {
+                    return (
+                        typeof teardown === 'function'
+                            ? teardown.call(this, v)
                             : v
                     );
                 });
