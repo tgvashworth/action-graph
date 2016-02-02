@@ -1,2 +1,7 @@
-export * from './createClass';
-export * from './is';
+import createClass from './createClass';
+import run from './run';
+
+export {
+    createClass,
+    run
+};
