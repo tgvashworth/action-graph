@@ -92,9 +92,3 @@ export const SendAMessage = createClass({
 ### License
 
 MIT
-
-[change-detector]: http://googletesting.blogspot.co.uk/2015/01/testing-on-toilet-change-detector-tests.html
-[node]: https://nodejs.org/
-[npm]: https://www.npmjs.com/
-[todomvc-actions]: https://github.com/phuu/todomvc/blob/integrator/tests/integrator/actions.js
-[new-issue]: https://github.com/phuu/integrator/issues/new
