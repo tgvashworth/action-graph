@@ -142,3 +142,19 @@ test(
         );
     }
 );
+
+test(
+    'createClass can overwrite getDependencies with fixtures',
+    (t) => {
+        var Dep = createClass();
+        var Example = createClass({
+            getDependencies: () => ([ new Dep({ a: 10 }) ])
+        });
+        var example = new Example();
+        t.ok(
+            example.getDependencies()
+                .zip(fromJS([ new Dep({ a: 10 }) ]))
+                .every(([ l, r ]) => is(l, r))
+        );
+    }
+);
