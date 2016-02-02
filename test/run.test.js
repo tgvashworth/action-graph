@@ -18,7 +18,7 @@ test(
         });
         return run(new Example());
     }
-)
+);
 
 test(
     'it runs the teardown phase for an action with no dependencies',
@@ -31,7 +31,7 @@ test(
         });
         return run(new Example());
     }
-)
+);
 
 test(
     'it runs the teardown phase for an action with no dependencies after the run phase',
@@ -50,4 +50,67 @@ test(
         });
         return run(new Example());
     }
-)
+);
+
+test(
+    'it runs the run phase for a dependency before the target',
+    (t) => {
+        t.plan(2);
+        var count = 0;
+        var ActionA = createClass({
+            run() {
+                t.same(count, 0);
+                count++;
+            }
+        });
+        var ActionB = createClass({
+            getDependencies() {
+                return [
+                    new ActionA()
+                ];
+            },
+
+            run() {
+                t.same(count, 1);
+            }
+        });
+        return run(new ActionB());
+    }
+);
+
+test(
+    'it runs the teardown phase for a dependency after the target',
+    (t) => {
+        t.plan(4);
+        var count = 0;
+        var ActionA = createClass({
+            run() {
+                t.same(count, 0);
+                count++;
+            },
+
+            teardown() {
+                t.same(count, 3);
+                count++;
+            }
+        });
+        var ActionB = createClass({
+            getDependencies() {
+                return [
+                    new ActionA()
+                ];
+            },
+
+            run() {
+                t.same(count, 1);
+                count++;
+            },
+
+            teardown() {
+                t.same(count, 2);
+                count++;
+            }
+        });
+        return run(new ActionB());
+    }
+);

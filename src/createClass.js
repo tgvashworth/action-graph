@@ -1,4 +1,5 @@
 import { Map, List } from 'immutable';
+import uniqueId from 'lodash.uniqueid';
 
 export default function createClass(spec={}) {
     const {
@@ -11,11 +12,13 @@ export default function createClass(spec={}) {
     } = spec;
 
     class Action {
+        static _id = uniqueId('ActionClass');
         // Static and on the instance, because that's just easier
         static displayName = displayName;
         displayName = displayName;
 
         constructor(fixtures = Map()) {
+            this._id = uniqueId('ActionInstance');
             this.fixtures = this.getDefaultFixtures().merge(fixtures);
         }
 
