@@ -12,6 +12,10 @@ export default function createClass(spec={}) {
         static displayName = displayName;
         displayName = displayName;
 
+        constructor(fixtures = Map()) {
+            this.fixtures = this.getDefaultFixtures().merge(fixtures);
+        }
+
         // The description is used when describing what will be run, and other
         // logging tasks.
         getDescription() {

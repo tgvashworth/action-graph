@@ -89,3 +89,25 @@ test(
         );
     }
 );
+
+
+test(
+    'instantiation merges input with default fixtures',
+    (t) => {
+        var Example = createClass({
+            getDefaultFixtures: () => ({ a: 1 })
+        });
+        var example = new Example({
+            b: 2
+        });
+        t.ok(
+            Immutable.is(
+                example.fixtures,
+                fromJS({
+                    a: 1,
+                    b: 2
+                })
+            )
+        );
+    }
+);
