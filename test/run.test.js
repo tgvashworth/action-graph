@@ -121,7 +121,8 @@ test(
         t.plan(2);
         var contextExample = {};
         var ActionA = createClass({
-            run(context) {
+            run() {
+                const { context } = this;
                 t.same(context.example, contextExample);
             }
         });
@@ -132,7 +133,8 @@ test(
                 ];
             },
 
-            run(context) {
+            run() {
+                const { context } = this;
                 t.same(context.example, contextExample);
             }
         });

@@ -45,9 +45,8 @@ const OpenUrl = createClass({
         };
     },
 
-    run(context) {
-        const { fixtures } = this;
-        const { session } = context;
+    run() {
+        const { fixtures, context: { session } } = this;
         return session
             .get(fixtures.get('url'))
             .then(() => session.getPageTitle())
@@ -58,7 +57,7 @@ const OpenUrl = createClass({
             });
     },
 
-    teardown(context) {
+    teardown() {
         // ...
     }
 });
