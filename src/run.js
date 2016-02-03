@@ -3,6 +3,7 @@ import buildRunPath from './buildRunPath';
 
 function ActionError(e, action) {
     this.message = e.message;
+    this.stack = e.stack;
     this.action = action;
 }
 
