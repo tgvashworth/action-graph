@@ -11,10 +11,16 @@ function makeBundleErrorInAction(action) {
     };
 }
 
-function makePhase(k, runPath) {
+function makePhase(phase, runPath) {
     return initialState => runPath.reduce((pPrev, action) => {
         return pPrev
-            .then(state => action[k](state))
+            .then(state => action[phase](state))
+            .then(resultState => {
+                if (!(resultState instanceof Map)) {
+                    throw new Error(`You must return a state object from Action#${phase}()`)
+                }
+                return resultState;
+            })
             .catch(makeBundleErrorInAction(action));
     }, Promise.resolve(initialState));
 }

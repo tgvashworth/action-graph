@@ -12,8 +12,9 @@ test(
     (t) => {
         t.plan(1);
         var Example = createClass({
-            run() {
+            run(v) {
                 t.pass();
+                return v;
             }
         });
         return run(new Example());
@@ -25,8 +26,9 @@ test(
     (t) => {
         t.plan(1);
         var Example = createClass({
-            teardown() {
+            teardown(v) {
                 t.pass();
+                return v;
             }
         });
         return run(new Example());
@@ -39,13 +41,15 @@ test(
         t.plan(2);
         var count = 0;
         var Example = createClass({
-            run() {
+            run(v) {
                 t.same(count, 0);
                 count++;
+                return v;
             },
 
-            teardown() {
+            teardown(v) {
                 t.same(count, 1);
+                return v;
             }
         });
         return run(new Example());
@@ -58,9 +62,10 @@ test(
         t.plan(2);
         var count = 0;
         var ActionA = createClass({
-            run() {
+            run(v) {
                 t.same(count, 0);
                 count++;
+                return v;
             }
         });
         var ActionB = createClass({
@@ -70,8 +75,9 @@ test(
                 ];
             },
 
-            run() {
+            run(v) {
                 t.same(count, 1);
+                return v;
             }
         });
         return run(new ActionB());
@@ -84,14 +90,16 @@ test(
         t.plan(4);
         var count = 0;
         var ActionA = createClass({
-            run() {
+            run(v) {
                 t.same(count, 0);
                 count++;
+                return v;
             },
 
-            teardown() {
+            teardown(v) {
                 t.same(count, 3);
                 count++;
+                return v;
             }
         });
         var ActionB = createClass({
@@ -101,14 +109,16 @@ test(
                 ];
             },
 
-            run() {
+            run(v) {
                 t.same(count, 1);
                 count++;
+                return v;
             },
 
-            teardown() {
+            teardown(v) {
                 t.same(count, 2);
                 count++;
+                return v;
             }
         });
         return run(new ActionB());
@@ -121,9 +131,10 @@ test(
         t.plan(2);
         var contextExample = {};
         var ActionA = createClass({
-            run() {
+            run(v) {
                 const { context } = this;
                 t.same(context.example, contextExample);
+                return v;
             }
         });
         var ActionB = createClass({
@@ -133,9 +144,10 @@ test(
                 ];
             },
 
-            run() {
+            run(v) {
                 const { context } = this;
                 t.same(context.example, contextExample);
+                return v;
             }
         });
         return run(new ActionB(), {
@@ -226,5 +238,43 @@ test(
                 t.ok(state.get('B teardown'), true);
                 t.ok(state.get('A teardown'), true);
             });
+    }
+);
+
+test(
+    'throws if state is not returned from run',
+    (t) => {
+        t.plan(1);
+        var Action = createClass({
+            run() {
+                return false; // oh no!
+            }
+        });
+        return run(new Action(), {}, fromJS({}))
+            .then(
+                () => t.fail(),
+                (err) => {
+                    t.same(err.message, 'You must return a state object from Action#run()');
+                }
+            );
+    }
+);
+
+test(
+    'throws if state is not returned from teardown',
+    (t) => {
+        t.plan(1);
+        var Action = createClass({
+            teardown() {
+                return false; // oh no!
+            }
+        });
+        return run(new Action(), {}, fromJS({}))
+            .then(
+                () => t.fail(),
+                (err) => {
+                    t.same(err.message, 'You must return a state object from Action#teardown()');
+                }
+            );
     }
 );
