@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import Immutable, { fromJS } from 'immutable';
 
 export default function is(left, right) {
     // Must be the same class
@@ -7,7 +7,7 @@ export default function is(left, right) {
     }
 
     // Fixtures must be identical
-    if (!Immutable.is(left.fixtures, right.fixtures)) {
+    if (!Immutable.is(fromJS(left.fixtures), fromJS(right.fixtures))) {
         return false;
     }
 

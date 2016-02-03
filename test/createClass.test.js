@@ -68,7 +68,7 @@ test(
         t.plan(1);
         var Example = createClass({
             getDescription(fixtures) {
-                t.same(fixtures, fromJS({ a: 1 }));
+                t.same(fixtures, { a: 1 });
             }
         });
         var example = new Example({ a: 1 });
@@ -81,11 +81,9 @@ test(
     (t) => {
         var Example = createClass();
         var example = new Example();
-        t.ok(
-            Immutable.is(
-                example.getDefaultFixtures(),
-                fromJS({})
-            )
+        t.same(
+            example.getDefaultFixtures(),
+            {}
         );
     }
 );
@@ -97,11 +95,9 @@ test(
             getDefaultFixtures: () => ({ a: 1 })
         });
         var example = new Example();
-        t.ok(
-            Immutable.is(
-                example.getDefaultFixtures(),
-                fromJS({ a: 1 })
-            )
+        t.same(
+            example.getDefaultFixtures(),
+            { a: 1 }
         );
     }
 );
@@ -116,14 +112,9 @@ test(
         var example = new Example({
             b: 2
         });
-        t.ok(
-            Immutable.is(
-                example.fixtures,
-                fromJS({
-                    a: 1,
-                    b: 2
-                })
-            )
+        t.same(
+            example.fixtures,
+            { a: 1, b: 2 }
         );
     }
 );

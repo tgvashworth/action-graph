@@ -1,4 +1,4 @@
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 import uniqueId from 'lodash.uniqueid';
 
 export default function createClass(spec = {}) {
@@ -17,9 +17,9 @@ export default function createClass(spec = {}) {
         static displayName = displayName;
         displayName = displayName;
 
-        constructor(fixtures = Map()) {
+        constructor(fixtures = {}) {
             this._id = uniqueId('ActionInstance');
-            this.fixtures = this.getDefaultFixtures().merge(fixtures);
+            this.fixtures = fromJS(this.getDefaultFixtures()).merge(fromJS(fixtures)).toJS();
         }
 
         // The description is used when describing what will be run, and other
@@ -37,8 +37,8 @@ export default function createClass(spec = {}) {
         getDefaultFixtures() {
             return (
                 typeof getDefaultFixtures === 'function'
-                    ? Map(getDefaultFixtures.call(this))
-                    : Map()
+                    ? getDefaultFixtures.call(this)
+                    : {}
             );
         }
 
