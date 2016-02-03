@@ -1,3 +1,4 @@
+import { Map } from 'immutable';
 import buildRunPath from './buildRunPath';
 
 function makeBundleErrorInAction(action) {
@@ -11,14 +12,14 @@ function makeBundleErrorInAction(action) {
 }
 
 function makePhase(k, runPath) {
-    return () => runPath.reduce((pPrev, action) => {
+    return initialState => runPath.reduce((pPrev, action) => {
         return pPrev
-            .then(() => action[k]())
+            .then(state => action[k](state))
             .catch(makeBundleErrorInAction(action));
-    }, Promise.resolve());
+    }, Promise.resolve(initialState));
 }
 
-export default function run(targetAction, context) {
+export default function run(targetAction, context, initialState = Map()) {
     const runPath = buildRunPath(targetAction).map(dep => {
         dep.context = context;
         return dep;
@@ -26,7 +27,7 @@ export default function run(targetAction, context) {
     const doRun = makePhase('run', runPath);
     const doTeardown = makePhase('teardown', runPath.reverse());
 
-    return Promise.resolve()
+    return Promise.resolve(initialState)
         .then(doRun)
         .then(doTeardown);
 }

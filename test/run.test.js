@@ -185,3 +185,46 @@ test(
             );
     }
 );
+
+test(
+    'run passes state to phases and passes on return value',
+    (t) => {
+        t.plan(8);
+        var initialState = fromJS({});
+        var ActionA = createClass({
+            run(state) {
+                t.is(state, initialState);
+                return state.set('A run', true);
+            },
+
+            teardown(state) {
+                t.ok(state.get('B teardown'));
+                return state.set('A teardown', true);
+            }
+        });
+        var ActionB = createClass({
+            getDependencies() {
+                return [
+                    new ActionA()
+                ];
+            },
+
+            run(state) {
+                t.ok(state.get('A run'));
+                return state.set('B run', true);
+            },
+
+            teardown(state) {
+                t.ok(state.get('B run'));
+                return state.set('B teardown', true);
+            }
+        });
+        return run(new ActionB(), {}, initialState)
+            .then((state) => {
+                t.ok(state.get('A run'), true);
+                t.ok(state.get('B run'), true);
+                t.ok(state.get('B teardown'), true);
+                t.ok(state.get('A teardown'), true);
+            });
+    }
+);
