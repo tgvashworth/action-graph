@@ -168,7 +168,7 @@ test(
 );
 
 test(
-    'createClass has default run',
+    'createClass has default run which passes arg',
     (t) => {
         var Example = createClass();
         var example = new Example();
@@ -180,7 +180,7 @@ test(
 );
 
 test(
-    'createClass can overwrite run',
+    'createClass can overwrite run but is still passed arg',
     (t) => {
         t.plan(2);
         var Dep = createClass();
