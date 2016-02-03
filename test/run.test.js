@@ -165,18 +165,20 @@ test(
 test(
     'run propagates teardown errors',
     (t) => {
-        t.plan(2);
+        t.plan(3);
         var Action = createClass({
             teardown() {
                 t.pass();
                 throw new Error('Nope');
             }
         });
-        return run(new Action())
+        var instance = new Action();
+        return run(instance)
             .then(
                 () => t.fail(),
                 (err) => {
                     t.same(err.message, 'Nope');
+                    t.same(err.action, instance);
                 }
             );
     }
