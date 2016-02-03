@@ -1,13 +1,14 @@
-import { Map } from 'immutable';
+import Immutable, { Map } from 'immutable';
 import buildRunPath from './buildRunPath';
+
+function ActionError(e, action) {
+    this.message = e.message;
+    this.action = action;
+}
 
 function makeBundleErrorInAction(action) {
     return e => {
-        throw {
-            stack: e.stack,
-            message: e.message,
-            action
-        };
+        throw new ActionError(e, action);
     };
 }
 
@@ -16,7 +17,7 @@ function makePhase(phase, runPath) {
         return pPrev
             .then(state => action[phase](state))
             .then(resultState => {
-                if (!(resultState instanceof Map)) {
+                if (!Immutable.Iterable.isIterable(resultState)) {
                     throw new Error(`You must return a state object from Action#${phase}()`)
                 }
                 return resultState;
@@ -25,7 +26,7 @@ function makePhase(phase, runPath) {
     }, Promise.resolve(initialState));
 }
 
-export default function run(targetAction, context, initialState = Map()) {
+export default function run(targetAction, context = {}, initialState = Map()) {
     const runPath = buildRunPath(targetAction).map(dep => {
         dep.context = context;
         return dep;

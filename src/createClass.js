@@ -65,12 +65,12 @@ export default function createClass(spec = {}) {
         }
 
         // Teardown allows an action to undo what it previously did
-        teardown(v) {
+        teardown(v, ...args) {
             return Promise.resolve()
                 .then(() => {
                     return (
                         typeof teardown === 'function'
-                            ? teardown.call(this, v)
+                            ? teardown.call(this, v, ...args)
                             : v
                     );
                 });
