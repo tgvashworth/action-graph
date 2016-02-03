@@ -1,4 +1,4 @@
-import Immutable, { Map } from 'immutable';
+import Immutable, { Map, fromJS } from 'immutable';
 import buildRunPath from './buildRunPath';
 
 function ActionError(e, action) {
@@ -26,15 +26,14 @@ function makePhase(phase, runPath) {
     }, Promise.resolve(initialState));
 }
 
-export default function run(targetAction, context = {}, initialState = Map()) {
+export default function run(targetAction, context = {}, initialState = {}) {
     const runPath = buildRunPath(targetAction).map(dep => {
         dep.context = context;
         return dep;
     });
     const doRun = makePhase('run', runPath);
     const doTeardown = makePhase('teardown', runPath.reverse());
-
-    return Promise.resolve(initialState)
+    return Promise.resolve(fromJS(initialState))
         .then(doRun)
         .then(doTeardown);
 }
