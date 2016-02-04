@@ -45,20 +45,26 @@ const OpenUrl = createClass({
         };
     },
 
-    run() {
+    // 'run' is where you do most of the work of an Action. It recieves the current
+    // state as an argument, and must return some state, which is then passed to the
+    // next Action to run.
+    run(state) {
         const { fixtures, context: { session } } = this;
         return session
-            .get(fixtures.get('url'))
+            .get(fixtures.url)
             .then(() => session.getPageTitle())
             .then(title => {
-                if (title !== fixtures.get('expectedTitle')) {
+                if (title !== fixtures.expectedTitle) {
                     throw new Error('Title was not as expected');
                 }
-            });
+            })
+            .then(() => state.set('currentUrl', fixtures.url));
     },
 
-    teardown() {
-        // ...
+    // 'teardown' is where you undo what 'run' did. It's optional, but you might use
+    // it to close a modal window or delete temporary files.
+    teardown(state) {
+        return state;
     }
 });
 
@@ -88,10 +94,13 @@ const SendAMessage = createClass({
     }
 });
 
-// Actually run the action. Second argument is 'context'
-run(SendAMessage, {
-    session: getSession()
-});
+// Actually run the action. Second argument is 'context', third is the 
+// initial state.
+run(
+    SendAMessage,
+    { session: getSession() },
+    {}
+);
 ```
 
 ### License
