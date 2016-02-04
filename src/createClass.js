@@ -5,7 +5,7 @@ export default function createClass(spec = {}) {
     const {
         displayName = '',
         getDescription,
-        getDefaultFixtures,
+        getDefaultProps,
         getDependencies,
         run,
         teardown
@@ -17,9 +17,9 @@ export default function createClass(spec = {}) {
         static displayName = displayName;
         displayName = displayName;
 
-        constructor(fixtures = {}) {
+        constructor(props = {}) {
             this._id = uniqueId('ActionInstance');
-            this.fixtures = fromJS(this.getDefaultFixtures()).merge(fromJS(fixtures)).toJS();
+            this.props = fromJS(this.getDefaultProps()).merge(fromJS(props)).toJS();
         }
 
         // The description is used when describing what will be run, and other
@@ -27,17 +27,17 @@ export default function createClass(spec = {}) {
         getDescription() {
             return (
                 typeof getDescription === 'function'
-                    ? getDescription.call(this, this.fixtures)
+                    ? getDescription.call(this, this.props)
                     : this.displayName
             );
         }
 
-        // Default fixtures, merged with those passed into the Action's
+        // Default props, merged with those passed into the Action's
         // constructor, are used to differentiate identify the Action.
-        getDefaultFixtures() {
+        getDefaultProps() {
             return (
-                typeof getDefaultFixtures === 'function'
-                    ? getDefaultFixtures.call(this)
+                typeof getDefaultProps === 'function'
+                    ? getDefaultProps.call(this)
                     : {}
             );
         }

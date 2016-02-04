@@ -6,8 +6,8 @@ export default function is(left, right) {
         return false;
     }
 
-    // Fixtures must be identical
-    if (!Immutable.is(fromJS(left.fixtures), fromJS(right.fixtures))) {
+    // Props must be identical
+    if (!Immutable.is(fromJS(left.props), fromJS(right.props))) {
         return false;
     }
 

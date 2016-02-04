@@ -22,7 +22,7 @@ test('does not match two instances of different class', (t) => {
     );
 });
 
-test('does not match two instances with different fixtures', (t) => {
+test('does not match two instances with different props', (t) => {
     var Example = createClass();
     t.notOk(
         is(new Example({ a: 1 }), new Example({ b: 2 }))
