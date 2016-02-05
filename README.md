@@ -34,11 +34,11 @@ import {
 
 const OpenUrl = createClass({
     getDescription() {
-        const { fixtures } = this; // if you want
-        return `Open ${fixtures.get('url')}`;
+        const { props } = this; // if you want
+        return `Open ${props.get('url')}`;
     },
 
-    getDefaultFixtures() {
+    getDefaultProps() {
         return {
             url: 'http://localhost',
             expectedTitle: ''
@@ -49,16 +49,16 @@ const OpenUrl = createClass({
     // state as an argument, and must return some state, which is then passed to the
     // next Action to run.
     run(state) {
-        const { fixtures, context: { session } } = this;
+        const { props, context: { session } } = this;
         return session
-            .get(fixtures.url)
+            .get(props.url)
             .then(() => session.getPageTitle())
             .then(title => {
-                if (title !== fixtures.expectedTitle) {
+                if (title !== props.expectedTitle) {
                     throw new Error('Title was not as expected');
                 }
             })
-            .then(() => state.set('currentUrl', fixtures.url));
+            .then(() => state.set('currentUrl', props.url));
     },
 
     // 'teardown' is where you undo what 'run' did. It's optional, but you might use
@@ -70,7 +70,7 @@ const OpenUrl = createClass({
 
 const SendAMessage = createClass({
     getDependencies() {
-        const { fixtures } = this; // if you want
+        const { props } = this; // if you want
         return [
             OpenUrl({
                 url: 'https://your.app',
@@ -94,7 +94,7 @@ const SendAMessage = createClass({
     }
 });
 
-// Actually run the action. Second argument is 'context', third is the 
+// Actually run the action. Second argument is 'context', third is the
 // initial state.
 run(
     SendAMessage,

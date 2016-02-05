@@ -63,12 +63,12 @@ test(
 );
 
 test(
-    'createClass passes fixtures to getDescription',
+    'createClass passes props to getDescription',
     (t) => {
         t.plan(1);
         var Example = createClass({
-            getDescription(fixtures) {
-                t.same(fixtures, { a: 1 });
+            getDescription(props) {
+                t.same(props, { a: 1 });
             }
         });
         var example = new Example({ a: 1 });
@@ -77,26 +77,26 @@ test(
 );
 
 test(
-    'createClass has default getDefaultFixtures',
+    'createClass has default getDefaultProps',
     (t) => {
         var Example = createClass();
         var example = new Example();
         t.same(
-            example.getDefaultFixtures(),
+            example.getDefaultProps(),
             {}
         );
     }
 );
 
 test(
-    'createClass can overwrite getDefaultFixtures',
+    'createClass can overwrite getDefaultProps',
     (t) => {
         var Example = createClass({
-            getDefaultFixtures: () => ({ a: 1 })
+            getDefaultProps: () => ({ a: 1 })
         });
         var example = new Example();
         t.same(
-            example.getDefaultFixtures(),
+            example.getDefaultProps(),
             { a: 1 }
         );
     }
@@ -104,16 +104,16 @@ test(
 
 
 test(
-    'instantiation merges input with default fixtures',
+    'instantiation merges input with default props',
     (t) => {
         var Example = createClass({
-            getDefaultFixtures: () => ({ a: 1 })
+            getDefaultProps: () => ({ a: 1 })
         });
         var example = new Example({
             b: 2
         });
         t.same(
-            example.fixtures,
+            example.props,
             { a: 1, b: 2 }
         );
     }
@@ -151,7 +151,7 @@ test(
 );
 
 test(
-    'createClass can overwrite getDependencies with fixtures',
+    'createClass can overwrite getDependencies with props',
     (t) => {
         var Dep = createClass();
         var Example = createClass({
@@ -209,7 +209,7 @@ test(
                 return '';
             },
 
-            getDefaultFixtures() {
+            getDefaultProps() {
                 t.same(this.constructor, Example);
                 return {};
             },
