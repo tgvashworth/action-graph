@@ -21,6 +21,17 @@ const M = createClass({ displayName: 'M', getDependencies: () => ([ new K() ]) }
 const N = createClass({ displayName: 'N', getDependencies: () => ([ new L(), new M() ]) });
 const O = createClass({ displayName: 'O', getDependencies: () => ([ new J(), new G(), new N() ]) });
 
+// Actions that depend on constructors, not instances
+const A2 = createClass({ displayName: 'A2' });
+const B2 = createClass({ displayName: 'B2', getDependencies: () => [ A2 ] });
+const C2 = createClass({ displayName: 'C2', getDependencies: () => [ new A2(), new B2() ] });
+const D2 = createClass({ displayName: 'D2', getDependencies: () => [ new A2(), B2, new C2() ] });
+const E2 = createClass({ displayName: 'E2', getDependencies: () => [ A2, B2 ] });
+const F2 = createClass({ displayName: 'F2', getDependencies: () => [ new B2() ] });
+// G2 is bad, its tree does not contain an implementation of A2
+const G2 = createClass({ displayName: 'G2', getDependencies: () => [ new E2(), new F2() ] });
+const H2 = createClass({ displayName: 'H2', getDependencies: () => [ new A2(), new G2() ] });
+
 test('importable', (t) => {
     t.ok(buildRunPath);
 });
@@ -57,6 +68,14 @@ let buildActionPathData = [
         fromJS([ new K(), new L(), new M(), new N() ]) ],
     [ new O(),
         fromJS([ new A(), new B(), new E(), new H(), new J(), new C(), new F(), new G(), new K(), new L(), new M(), new N(), new O() ]) ],
+
+    // Constructors
+    [ new C2(),
+        fromJS([ new A2(), new B2(), new C2() ]) ],
+    [ new D2(),
+        fromJS([ new A2(), new B2(), new C2(), new D2() ]) ],
+    [ new H2(),
+        fromJS([ new A2(), new B2(), new E2(), new F2(), new G2(), new H2() ]) ]
 ];
 buildActionPathData
     .forEach(([action, expected]) => {
@@ -68,5 +87,17 @@ buildActionPathData
                     expected
                 )
             );
+        });
+    });
+
+var throwBuildActionPathData = [
+    new G2()
+];
+throwBuildActionPathData
+    .forEach(action => {
+        test(`${action.displayName} throws`, (t) => {
+            t.throws(() => {
+                buildRunPath(action);
+            });
         });
     });
