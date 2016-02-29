@@ -28,13 +28,20 @@ function makePhase(phase, runPath) {
 }
 
 export default function run(targetAction, context = {}, initialState = {}) {
-    const runPath = buildRunPath(targetAction).map(dep => {
-        dep.context = context;
-        return dep;
-    });
-    const doRun = makePhase('run', runPath);
-    const doTeardown = makePhase('teardown', runPath.reverse());
-    return Promise.resolve(fromJS(initialState))
-        .then(doRun)
-        .then(doTeardown);
+    return Promise.resolve()
+        .then(() => {
+            const runPath = buildRunPath(targetAction).map(dep => {
+                dep.context = context;
+                return dep;
+            });
+            const doRun = makePhase('run', runPath);
+            const doTeardown = makePhase('teardown', runPath.reverse());
+            return { runPath, doRun, doTeardown };
+        })
+        .catch(makeBundleErrorInAction(targetAction))
+        .then(({ runPath, doRun, doTeardown }) => {
+            return Promise.resolve(fromJS(initialState))
+                .then(doRun)
+                .then(doTeardown)
+        });
 }
