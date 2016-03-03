@@ -27,6 +27,8 @@ OpenTheWebsite
  SendAMessage
 ```
 
+If you run the `SendAMessage` action, action-graph will automatically run `OpenTheWebsite` and `Login` first.
+
 If you then wanted to test "delete a message" it would also depend on "login" and "open the website". You'd create a new action, `DeleteAMessage`, and have it depend on `Login`. Your graph now looks like...
 
 ```
@@ -36,6 +38,8 @@ If you then wanted to test "delete a message" it would also depend on "login" an
              / \
  SendAMessage   DeleteAMessage
 ```
+
+Running `DeleteAMessage` would cause `OpenAWebsite` and `Login` to run, but not `SendAMessage`. This is action-graph's special sauce — it will figure out the minimum amount of work required to run an action.
 
 ## A simple example
 
