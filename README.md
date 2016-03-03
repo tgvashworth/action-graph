@@ -151,25 +151,27 @@ const OpenUrl = createClass({
 });
 
 const SendAMessage = createClass({
+    // 'getDependencies' is where an action specifies its dependencies. They are specified as
+    // instances of actions, or just using the constructor.
     getDependencies() {
         const { props } = this; // if you want
         return [
-            OpenUrl({
+            new OpenUrl({
                 url: 'https://your.app',
                 expectedTitle: 'My App'
             }),
-            Click({
+            new Click({
                 selector: '.new'
             }),
-            Type({
+            new Type({
                 selector: '.subject',
                 text: 'The subject'
             }),
-            Type({
+            new Type({
                 selector: 'textarea',
                 text: 'The message'
             }),
-            Click({
+            new Click({
                 selector: '.send'
             })
         ];
