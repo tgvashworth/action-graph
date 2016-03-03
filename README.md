@@ -39,7 +39,7 @@ If you then wanted to test "delete a message" it would also depend on "login" an
  SendAMessage   DeleteAMessage
 ```
 
-Running `DeleteAMessage` would cause `OpenAWebsite` and `Login` to run, but not `SendAMessage`. This is action-graph's special sauce — it will figure out the minimum amount of work required to run an action.
+Running `DeleteAMessage` would cause `OpenAWebsite` and `Login` to run, but not `SendAMessage`. This is action-graph's special sauce — it will figure out the minimum amount of work required to run an action, even with very complicated (or repeated) dependencies.
 
 ## A simple example
 
