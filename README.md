@@ -15,16 +15,38 @@ $ npm install --save action-graph
 
 ## The idea
 
-action-graph's core idea is that each action may specify a list of depedencies, which will also be actions. When action-graph runs a particular action it ensures that all the actions dependencies have been run first, in a predictable order. Each dependency may specify its own dependecies, and action graph will do the same with them.
+Actions have dependencies. The dependencies are also actions, which in turn can have their own dependencies. For example, an action to "send a message" might need to first "login", and before you can "login" you need to "open the website".
 
-Here's a simple action:
+With action graph, you'd specify this with three actions: `SendAMessage`, `Login` and `OpenTheWebsite`. `SendAMessage` would depend on `Login`, and `Login` would depend on `OpenTheWebsite`...
+
+```
+OpenTheWebsite
+      |
+    Login
+      |
+ SendAMessage
+```
+
+If you then wanted to test "delete a message" it would also depend on "login" and "open the website". You'd create a new action, `DeleteAMessage`, and have it depend on `Login`. Your graph now looks like...
+
+```
+        OpenTheWebsite
+              |
+            Login
+             / \
+ SendAMessage   DeleteAMessage
+```
+
+## A simple example
+
+Here's an action with no dependencies.
 
 ```js
 import { createClass } from 'action-graph';
 
 // Calling createClass is how you make an action constructor. Pass it an object, it does the rest.
 const SayHello = createClass({
-    // This is where the action does most of its work. The first rule is that run is passed a
+    // 'run' is where the action does most of its work. The first rule is that run is passed a
     // 'state' object, where it can store information about what it has done done, and it
     // must return another state object to be passed to the next action.
     //
