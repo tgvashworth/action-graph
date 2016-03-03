@@ -52,7 +52,8 @@ import { createClass } from 'action-graph';
 const SayHello = createClass({
     // 'run' is where the action does most of its work. The first rule is that run is passed a
     // 'state' object, where it can store information about what it has done done, and it
-    // must return another state object to be passed to the next action.
+    // must return another state object to be passed to the next action. It can also return
+    // nothing, in which case the state will be passed on as it was.
     //
     // In this case we don't do anything with state — we just log a messasge!
     run(state) {
@@ -143,11 +144,9 @@ const OpenUrl = createClass({
     },
 
     // 'teardown' is where you undo what 'run' did. It's optional, but you might use
-    // it to close a modal window or delete temporary files. Like 'run', it takes and must return
+    // it to close a modal window or delete temporary files. Like 'run', it takes and can return
     // a state object.
-    teardown(state) {
-        return state;
-    }
+    teardown() {}
 });
 
 const SendAMessage = createClass({
@@ -178,8 +177,7 @@ const SendAMessage = createClass({
     }
 });
 
-// Actually run the action. Second argument is 'context', third is the
-// initial state.
+// Actually run the action. Second argument is 'context', third is the initial state.
 run(
     SendAMessage,
     { session: getSession() },

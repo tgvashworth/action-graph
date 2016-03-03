@@ -3,7 +3,7 @@ import uniqueId from 'lodash.uniqueid';
 
 export default function createClass(spec = {}) {
     const {
-        displayName = '',
+        displayName = 'unnamed action',
         getDescription,
         getDefaultProps,
         getDependencies,

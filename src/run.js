@@ -16,12 +16,20 @@ function makeBundleErrorInAction(action) {
 function makePhase(phase, runPath) {
     return initialState => runPath.reduce((pPrev, action) => {
         return pPrev
-            .then(state => action[phase](state))
-            .then(resultState => {
-                if (!Immutable.Iterable.isIterable(resultState)) {
-                    throw new Error(`You must return a state object from Action#${phase}()`)
-                }
-                return resultState;
+            .then(state => {
+                return Promise.resolve(state)
+                    .then(state => action[phase](state))
+                    .then(resultState => {
+                        const resultStateIsIterable = Immutable.Iterable.isIterable(resultState);
+                        const resultStateIsUndefined = typeof resultState === 'undefined';
+                        if (!resultStateIsUndefined && !resultStateIsIterable) {
+                            throw new Error(
+                                `You must return a state object or nothing from ` +
+                                    `${action.getDescription()}'s ${phase}`
+                            );
+                        }
+                        return (resultStateIsUndefined ? state : resultState);
+                    });
             })
             .catch(makeBundleErrorInAction(action));
     }, Promise.resolve(initialState));

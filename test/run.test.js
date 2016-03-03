@@ -254,7 +254,7 @@ test(
             .then(
                 () => t.fail(),
                 (err) => {
-                    t.same(err.message, 'You must return a state object from Action#run()');
+                    t.same(err.message, 'You must return a state object or nothing from unnamed action\'s run');
                 }
             );
     }
@@ -273,8 +273,44 @@ test(
             .then(
                 () => t.fail(),
                 (err) => {
-                    t.same(err.message, 'You must return a state object from Action#teardown()');
+                    t.same(err.message, 'You must return a state object or nothing from unnamed action\'s teardown');
                 }
             );
+    }
+);
+
+test(
+    'run passes state to phases and allows undefined return value',
+    (t) => {
+        t.plan(5);
+        var initialState = fromJS({});
+        var ActionA = createClass({
+            run(state) {
+                t.is(state, initialState);
+            },
+
+            teardown(state) {
+                t.is(state, initialState);
+            }
+        });
+        var ActionB = createClass({
+            getDependencies() {
+                return [
+                    new ActionA()
+                ];
+            },
+
+            run(state) {
+                t.is(state, initialState);
+            },
+
+            teardown(state) {
+                t.is(state, initialState);
+            }
+        });
+        return run(new ActionB(), {}, initialState)
+            .then(state => {
+                t.is(state, initialState);
+            });
     }
 );

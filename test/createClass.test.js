@@ -13,12 +13,12 @@ test('createClass handles no spec', (t) => {
 });
 
 test('createClass has default static displayName', (t) => {
-    t.same(createClass({}).displayName, '');
+    t.same(createClass({}).displayName, 'unnamed action');
 });
 
 test('createClass has default instance displayName', (t) => {
     var i = new createClass({});
-    t.same(i.displayName, '');
+    t.same(i.displayName, 'unnamed action');
 });
 
 test('createClass copies displayName to static property', (t) => {
