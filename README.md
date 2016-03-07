@@ -127,7 +127,7 @@ const OpenUrl = createClass({
 
     getDescription() {
         const { props } = this; // if you want
-        return `Open ${props.get('url')}`;
+        return `Open ${props.url}`;
     },
 
     run(state) {
@@ -153,7 +153,6 @@ const SendAMessage = createClass({
     // 'getDependencies' is where an action specifies its dependencies. They are specified as
     // instances of actions, or just using the constructor.
     getDependencies() {
-        const { props } = this; // if you want
         return [
             new OpenUrl({
                 url: 'https://your.app',
