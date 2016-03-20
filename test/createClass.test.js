@@ -119,6 +119,8 @@ test(
     }
 );
 
+// getDependencies
+
 test(
     'createClass has default getDependencies',
     (t) => {
@@ -166,6 +168,62 @@ test(
         );
     }
 );
+
+// beforeRun, afterRun, beforeTeardown, afterTeardown
+
+const methods = ['beforeRun', 'afterRun', 'beforeTeardown', 'afterTeardown'];
+
+methods.forEach(method => {
+    test(
+        `createClass has default ${method}`,
+        (t) => {
+            var Example = createClass();
+            var example = new Example();
+            t.ok(
+                Immutable.is(
+                    example[method](),
+                    fromJS([])
+                )
+            );
+        }
+    );
+
+    test(
+        `createClass can overwrite ${method}`,
+        (t) => {
+            var Dep = createClass();
+            var Example = createClass({
+                [method]: () => ([ new Dep() ])
+            });
+            var example = new Example();
+            t.ok(
+                sameActionsList(
+                    example[method](),
+                    fromJS([ new Dep() ])
+                )
+            );
+        }
+    );
+
+    test(
+        `createClass can overwrite ${method} with props`,
+        (t) => {
+            var Dep = createClass();
+            var Example = createClass({
+                [method]: () => ([ new Dep({ a: 10 }) ])
+            });
+            var example = new Example();
+            t.ok(
+                sameActionsList(
+                    example[method](),
+                    fromJS([ new Dep({ a: 10 }) ])
+                )
+            );
+        }
+    );
+});
+
+// run
 
 test(
     'createClass has default run which passes arg',

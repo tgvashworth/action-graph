@@ -7,8 +7,12 @@ export default function createClass(spec = {}) {
         getDefaultProps,
         getDescription,
         getDependencies,
+        beforeRun,
         run,
-        teardown
+        afterRun,
+        beforeTeardown,
+        teardown,
+        afterTeardown
     } = spec;
 
     class Action {
@@ -51,6 +55,15 @@ export default function createClass(spec = {}) {
             );
         }
 
+        // beforeRun is used to specify actions to be run before the action's main section
+        beforeRun() {
+            return (
+                typeof beforeRun === 'function'
+                    ? List(beforeRun.call(this))
+                    : List()
+            );
+        }
+
         // The main block of an action - do your work here.
         // The result is wrapped up in a Promise.
         run(v, ...args) {
@@ -64,6 +77,24 @@ export default function createClass(spec = {}) {
                 });
         }
 
+        // afterRun is used to specify actions to be run after the action's main section
+        afterRun() {
+            return (
+                typeof afterRun === 'function'
+                    ? List(afterRun.call(this))
+                    : List()
+            );
+        }
+
+        // beforeTeardown is used to specify actions to be run before the action's teardown section
+        beforeTeardown() {
+            return (
+                typeof beforeTeardown === 'function'
+                    ? List(beforeTeardown.call(this))
+                    : List()
+            );
+        }
+
         // Teardown allows an action to undo what it previously did
         teardown(v, ...args) {
             return Promise.resolve()
@@ -75,6 +106,16 @@ export default function createClass(spec = {}) {
                     );
                 });
         }
+
+        // afterTeardown is used to specify actions to be run after the action's teardown section
+        afterTeardown() {
+            return (
+                typeof afterTeardown === 'function'
+                    ? List(afterTeardown.call(this))
+                    : List()
+            );
+        }
+
     }
 
     return Action;
