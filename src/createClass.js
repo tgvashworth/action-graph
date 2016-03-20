@@ -4,8 +4,8 @@ import uniqueId from 'lodash.uniqueid';
 export default function createClass(spec = {}) {
     const {
         displayName = 'unnamed action',
-        getDescription,
         getDefaultProps,
+        getDescription,
         getDependencies,
         run,
         teardown
@@ -22,16 +22,6 @@ export default function createClass(spec = {}) {
             this.props = fromJS(this.getDefaultProps()).merge(fromJS(props)).toJS();
         }
 
-        // The description is used when describing what will be run, and other
-        // logging tasks.
-        getDescription() {
-            return (
-                typeof getDescription === 'function'
-                    ? getDescription.call(this, this.props)
-                    : this.displayName
-            );
-        }
-
         // Default props, merged with those passed into the Action's
         // constructor, are used to differentiate identify the Action.
         getDefaultProps() {
@@ -39,6 +29,16 @@ export default function createClass(spec = {}) {
                 typeof getDefaultProps === 'function'
                     ? getDefaultProps.call(this)
                     : {}
+            );
+        }
+
+        // The description is used when describing what will be run, and other
+        // logging tasks.
+        getDescription() {
+            return (
+                typeof getDescription === 'function'
+                    ? getDescription.call(this, this.props)
+                    : this.displayName
             );
         }
 
